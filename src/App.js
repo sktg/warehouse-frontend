@@ -1,7 +1,7 @@
 // force rebuild
 // FORCE VERCEL TO REBUILD FROM CORRECT FOLDER
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 const BASE_URL = "https://warehouse-backend-k1u4.onrender.com";
 
@@ -25,11 +25,11 @@ function App() {
     }
   };
 
-  const loadAll = () => {
-    safeFetch(`${BASE_URL}/dashboard`, setData);
-    safeFetch(`${BASE_URL}/tasks`, setTasks);
-    safeFetch(`${BASE_URL}/bins`, setBins);
-  };
+const loadAll = useCallback(() => {
+  safeFetch(`${BASE_URL}/dashboard`, setData);
+  safeFetch(`${BASE_URL}/tasks`, setTasks);
+  safeFetch(`${BASE_URL}/bins`, setBins);
+}, []);
 
 useEffect(() => {
   loadAll();
