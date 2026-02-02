@@ -1,4 +1,5 @@
 // force rebuild
+// FORCE VERCEL TO REBUILD FROM CORRECT FOLDER
 
 import React, { useEffect, useState } from "react";
 
@@ -30,7 +31,9 @@ function App() {
     safeFetch(`${BASE_URL}/bins`, setBins);
   };
 
-  useEffect(() => { loadAll(); }, []);
+useEffect(() => {
+  loadAll();
+}, [loadAll]);
   // ✅ Wait for backend before refresh
 const createOrder = async () => {
   try {
@@ -209,40 +212,7 @@ function Card({ title, value, color }) {
   );
 }
 
-function TaskTable({ tasks, onConfirm }) {
-  return (
-    <table style={table}>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Order</th>
-          <th>Product</th>
-          <th>Qty</th>
-          <th>Resource</th>
-          {onConfirm && <th></th>}
-        </tr>
-      </thead>
-      <tbody>
-        {tasks.map(t => (
-          <tr key={t.task_id}>
-            <td>{t.task_id}</td>
-            <td>{t.order_no}</td>
-            <td>{t.product}</td>
-            <td>{t.qty}</td>
-            <td>{t.allocated_resource || "-"}</td>
-            {onConfirm && (
-              <td>
-                <button style={btnPrimary} onClick={() => onConfirm(t.task_id)}>
-                  Confirm
-                </button>
-              </td>
-            )}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
+
 
 function TaskSection({ title, tasks, onConfirm }) {
   return (
