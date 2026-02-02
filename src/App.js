@@ -14,12 +14,12 @@ function App() {
   };
 
   useEffect(() => { loadAll(); }, []);
-
+//changed to send priority, fastAPI expecting JSON
   const createOrder = () => {
     fetch("https://warehouse-backend.onrender.com/create_order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(priority)
+      body: JSON.stringify({ priority }) 
     }).then(loadAll);
   };
 
