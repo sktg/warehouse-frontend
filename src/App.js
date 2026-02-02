@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 
+const BASE_URL = "https://warehouse-backend-k1u4.onrender.com";
+
+
 function App() {
   const [activeTab, setActiveTab] = useState("tasks");
   const [data, setData] = useState({});
@@ -8,15 +11,15 @@ function App() {
   const [priority, setPriority] = useState("P3");
 
   const loadAll = () => {
-    fetch("https://warehouse-backend.onrender.com/dashboard").then(r => r.json()).then(setData);
-    fetch("https://warehouse-backend.onrender.com/tasks").then(r => r.json()).then(setTasks);
-    fetch("https://warehouse-backend.onrender.com/bins").then(r => r.json()).then(setBins);
+    fetch("${BASE_URL}/dashboard").then(r => r.json()).then(setData);
+    fetch("${BASE_URL}/tasks").then(r => r.json()).then(setTasks);
+    fetch("${BASE_URL}/bins").then(r => r.json()).then(setBins);
   };
 
   useEffect(() => { loadAll(); }, []);
 //changed to send priority, fastAPI expecting JSON
   const createOrder = () => {
-    fetch("https://warehouse-backend.onrender.com/create_order", {
+    fetch("${BASE_URL}/create_order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ priority }) 
@@ -24,12 +27,12 @@ function App() {
   };
 
   const allocateTasks = () => {
-    fetch("https://warehouse-backend.onrender.com/allocate_tasks", { method: "POST" })
+    fetch("${BASE_URL}/allocate_tasks", { method: "POST" })
       .then(loadAll);
   };
 
 const confirmTask = async (id) => {
-  const res = await fetch(`https://warehouse-backend.onrender.com/confirm_task/${id}`, {
+  const res = await fetch(`${BASE_URL}/confirm_task/${id}`, {
     method: "POST"
   });
 
@@ -44,7 +47,7 @@ const confirmTask = async (id) => {
 
 
   const refillBin = (code) => {
-    fetch(`https://warehouse-backend.onrender.com/refill_bin/${code}`, { method: "POST" })
+    fetch(`${BASE_URL}/refill_bin/${code}`, { method: "POST" })
       .then(loadAll);
   };
 
