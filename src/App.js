@@ -12,46 +12,78 @@ function App() {
   const [bins, setBins] = useState([]);
   const [priority, setPriority] = useState("P3");
 
+  // ✅ Safe fetch helper (prevents JSON crash)
+  const safeFetch = async (url, setter) => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(res.status);
+      const json = await res.json();
+      setter(json);
+    } catch (e) {
+      console.error("Fetch failed:", url, e);
+    }
+  };
+
   const loadAll = () => {
-    fetch("${BASE_URL}/dashboard").then(r => r.json()).then(setData);
-    fetch("${BASE_URL}/tasks").then(r => r.json()).then(setTasks);
-    fetch("${BASE_URL}/bins").then(r => r.json()).then(setBins);
+    safeFetch(`${BASE_URL}/dashboard`, setData);
+    safeFetch(`${BASE_URL}/tasks`, setTasks);
+    safeFetch(`${BASE_URL}/bins`, setBins);
   };
 
   useEffect(() => { loadAll(); }, []);
-//changed to send priority, fastAPI expecting JSON
-  const createOrder = () => {
-    fetch("${BASE_URL}/create_order", {
+  // ✅ Wait for backend before refresh
+const createOrder = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/create_order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ priority }) 
-    }).then(loadAll);
-  };
+      body: JSON.stringify({ priority })
+    });
 
-  const allocateTasks = () => {
-    fetch("${BASE_URL}/allocate_tasks", { method: "POST" })
-      .then(loadAll);
-  };
-
-const confirmTask = async (id) => {
-  const res = await fetch(`${BASE_URL}/confirm_task/${id}`, {
-    method: "POST"
-  });
-
-  const data = await res.json();
-
-  if (data.error) {
-    alert("❌ Cannot confirm task:\n\n" + data.error);
-  } else {
+    if (!res.ok) throw new Error(res.status);
     loadAll();
+  } catch (e) {
+    console.error("Create order failed", e);
+  }
+};
+
+const allocateTasks = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/allocate_tasks`, {
+      method: "POST"
+    });
+
+    if (!res.ok) throw new Error(res.status);
+    loadAll();
+  } catch (e) {
+    console.error("Allocate failed", e);
   }
 };
 
 
-  const refillBin = (code) => {
-    fetch(`${BASE_URL}/refill_bin/${code}`, { method: "POST" })
-      .then(loadAll);
-  };
+const confirmTask = async (id) => {
+  try {
+    const res = await fetch(`${BASE_URL}/confirm_task/${id}`, {
+      method: "POST"
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      alert("❌ " + data.error);
+    } else {
+      loadAll();
+    }
+  } catch (e) {
+    console.error("Confirm failed", e);
+  }
+};
+
+
+const refillBin = async (code) => {
+  await fetch(`${BASE_URL}/refill_bin/${code}`, { method: "POST" });
+  loadAll();
+};
 
 return (
   <div style={page}>
