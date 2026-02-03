@@ -31,9 +31,17 @@ const loadAll = useCallback(() => {
   safeFetch(`${BASE_URL}/bins`, setBins);
 }, []);
 
+//refresh every 15 seconds for priority updates
 useEffect(() => {
   loadAll();
+
+  const interval = setInterval(() => {
+    loadAll();
+  }, 15000);
+
+  return () => clearInterval(interval);
 }, [loadAll]);
+
   // ✅ Wait for backend before refresh
 const createOrder = async () => {
   try {
@@ -212,7 +220,7 @@ function Card({ title, value, color }) {
   );
 }
 
-
+//added base priority and current rank columns for open tasks
 function TaskSection({ title, tasks, onConfirm }) {
   const isOpen = title === "Open Tasks";
 
@@ -224,6 +232,8 @@ function TaskSection({ title, tasks, onConfirm }) {
           <thead>
             <tr>
               <th>Order</th>
+              {isOpen && <th>Base Priority</th>}
+              {isOpen && <th>Current Rank</th>}
               <th>Product</th>
               <th>Qty</th>
               {!isOpen && <th>Resource</th>}
@@ -234,6 +244,25 @@ function TaskSection({ title, tasks, onConfirm }) {
             {tasks.map(t => (
               <tr key={t.task_id}>
                 <td>{t.order_no}</td>
+
+                {isOpen && (
+                  <td style={{
+                    fontWeight: 600,
+                    color:
+                      t.base_priority === "P1" ? "red" :
+                      t.base_priority === "P2" ? "orange" :
+                      "#444"
+                  }}>
+                    {t.base_priority}
+                  </td>
+                )}
+
+                {isOpen && (
+                  <td style={{ fontWeight: 600 }}>
+                    #{t.current_rank}
+                  </td>
+                )}
+
                 <td>{t.product}</td>
                 <td>{t.qty}</td>
 
