@@ -7,6 +7,7 @@ const BASE_URL = "https://warehouse-backend-k1u4.onrender.com";
 
 
 function App() {
+  const [resources, setResources] = useState([]);
   const [activeTab, setActiveTab] = useState("tasks");
   const [data, setData] = useState({});
   const [tasks, setTasks] = useState([]);
@@ -29,7 +30,9 @@ const loadAll = useCallback(() => {
   safeFetch(`${BASE_URL}/dashboard`, setData);
   safeFetch(`${BASE_URL}/tasks`, setTasks);
   safeFetch(`${BASE_URL}/bins`, setBins);
+  safeFetch(`${BASE_URL}/resource_status`, setResources); // ⭐ NEW
 }, []);
+
 
 //refresh every 15 seconds for priority updates
 useEffect(() => {
@@ -103,6 +106,7 @@ return (
     <div style={tabs}>
       <Tab active={activeTab === "tasks"} label="Tasks" onClick={() => setActiveTab("tasks")} />
       <Tab active={activeTab === "inventory"} label="Inventory" onClick={() => setActiveTab("inventory")} />
+      <Tab active={activeTab === "resources"} label="Resources" onClick={() => setActiveTab("resources")} />
     </div>
 
     {/* Cards */}
@@ -185,6 +189,48 @@ return (
         </div>
       </Section>
     )}
+    {activeTab === "resources" && (
+  <Section title="Resource Status">
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+      gap: 20,
+      marginTop: 20
+    }}>
+      {resources.map((r, idx) => (
+        <div key={idx} style={{
+          border: "1px solid #ddd",
+          borderRadius: 8,
+          padding: 16,
+          background: "white",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.05)"
+        }}>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>
+            {r.resource}
+          </div>
+
+          <div style={{
+            color: r.status === "Busy" ? "#e67e22" : "#27ae60",
+            fontWeight: 600,
+            marginBottom: 10
+          }}>
+            {r.status === "Busy" ? "Busy" : "Waiting for Assignment"}
+          </div>
+
+          {r.status === "Busy" && (
+            <>
+              <div><b>Task:</b> #{r.task_no}</div>
+              <div><b>Product:</b> {r.product}</div>
+              <div><b>From:</b> {r.source_bin}</div>
+              <div><b>To:</b> {r.dest_bin}</div>
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+  </Section>
+)}
+
   </div>
 );
 
