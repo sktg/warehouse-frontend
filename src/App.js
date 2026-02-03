@@ -224,18 +224,26 @@ function OpenTasksSection({ tasks }) {
     <div style={{ flex: 1 }}>
       <h3 style={{ marginBottom: 10 }}>Open Tasks</h3>
       <div style={scrollBox}>
+        //fixed table layout to prevent stretching
         <table style={table}>
+          <colgroup>
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "25%" }} />
+            <col style={{ width: "15%" }} />
+          </colgroup>
+
           <thead>
             <tr>
               <th style={thtd}>Order</th>
-              {isOpen && <th style={thtd}>Base Priority</th>}
-              {isOpen && <th style={thtd}>Current Rank</th>}
+              <th style={thtd}>Base Priority</th>
+              <th style={thtd}>Current Rank</th>
               <th style={thtd}>Product</th>
               <th style={thtd}>Qty</th>
-              {!isOpen && <th style={thtd}>Resource</th>}
-              {onConfirm && <th style={thtd}></th>}
             </tr>
           </thead>
+
           <tbody>
             {tasks.map(t => (
               <tr key={t.task_id}>
@@ -273,16 +281,26 @@ function AllocatedTasksSection({ tasks, onConfirm }) {
     <div style={{ flex: 1 }}>
       <h3 style={{ marginBottom: 10 }}>Allocated Tasks</h3>
       <div style={scrollBox}>
+        //fixed table layout to prevent stretching
         <table style={table}>
+          <colgroup>
+            <col style={{ width: "25%" }} />
+            <col style={{ width: "25%" }} />
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "15%" }} />
+          </colgroup>
+
           <thead>
             <tr>
-              <th>Order</th>
-              <th>Product</th>
-              <th>Qty</th>
-              <th>Resource</th>
-              <th></th>
+              <th style={thtd}>Order</th>
+              <th style={thtd}>Product</th>
+              <th style={thtd}>Qty</th>
+              <th style={thtd}>Resource</th>
+              <th style={thtd}></th>
             </tr>
           </thead>
+
           <tbody>
             {tasks.map(t => (
               <tr key={t.task_id}>
