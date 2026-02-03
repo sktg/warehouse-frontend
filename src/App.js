@@ -131,16 +131,14 @@ return (
 
         {/* Two scrollable sections */}
         <div style={taskContainer}>
-          <TaskSection
-            title="Open Tasks"
-            tasks={tasks.filter(t => t.status === "OPEN")}
-          />
+        <OpenTasksSection
+          tasks={tasks.filter(t => t.status === "OPEN")}
+        />
 
-          <TaskSection
-            title="Allocated Tasks"
-            tasks={tasks.filter(t => t.status === "ALLOCATED")}
-            onConfirm={confirmTask}
-          />
+        <AllocatedTasksSection
+          tasks={tasks.filter(t => t.status === "ALLOCATED")}
+          onConfirm={confirmTask}
+        />
         </div>
       </>
     )}
@@ -221,23 +219,19 @@ function Card({ title, value, color }) {
 }
 
 //added base priority and current rank columns for open tasks
-function TaskSection({ title, tasks, onConfirm }) {
-  const isOpen = title === "Open Tasks";
-
+function OpenTasksSection({ tasks }) {
   return (
     <div style={{ flex: 1 }}>
-      <h3 style={{ marginBottom: 10 }}>{title}</h3>
+      <h3 style={{ marginBottom: 10 }}>Open Tasks</h3>
       <div style={scrollBox}>
         <table style={table}>
           <thead>
             <tr>
               <th>Order</th>
-              {isOpen && <th>Base Priority</th>}
-              {isOpen && <th>Current Rank</th>}
+              <th>Base Priority</th>
+              <th>Current Rank</th>
               <th>Product</th>
               <th>Qty</th>
-              {!isOpen && <th>Resource</th>}
-              {onConfirm && <th></th>}
             </tr>
           </thead>
           <tbody>
@@ -245,41 +239,61 @@ function TaskSection({ title, tasks, onConfirm }) {
               <tr key={t.task_id}>
                 <td>{t.order_no}</td>
 
-                {isOpen && (
-                  <td style={{
-                    fontWeight: 600,
-                    color:
-                      t.base_priority === "P1" ? "red" :
-                      t.base_priority === "P2" ? "orange" :
-                      "#444"
-                  }}>
-                    {t.base_priority}
-                  </td>
-                )}
+                <td style={{
+                  fontWeight: 600,
+                  color:
+                    t.base_priority === "P1" ? "red" :
+                    t.base_priority === "P2" ? "orange" :
+                    "#444"
+                }}>
+                  {t.base_priority}
+                </td>
 
-                {isOpen && (
-                  <td style={{ fontWeight: 600 }}>
-                    #{t.current_rank}
-                  </td>
-                )}
+                <td style={{ fontWeight: 600 }}>
+                  #{t.current_rank}
+                </td>
 
                 <td>{t.product}</td>
                 <td>{t.qty}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
 
-                {!isOpen && (
-                  <td>{t.allocated_resource || "-"}</td>
-                )}
-
-                {onConfirm && (
-                  <td>
-                    <button
-                      style={btnPrimary}
-                      onClick={() => onConfirm(t.task_id)}
-                    >
-                      Confirm
-                    </button>
-                  </td>
-                )}
+function AllocatedTasksSection({ tasks, onConfirm }) {
+  return (
+    <div style={{ flex: 1 }}>
+      <h3 style={{ marginBottom: 10 }}>Allocated Tasks</h3>
+      <div style={scrollBox}>
+        <table style={table}>
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Resource</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {tasks.map(t => (
+              <tr key={t.task_id}>
+                <td>{t.order_no}</td>
+                <td>{t.product}</td>
+                <td>{t.qty}</td>
+                <td>{t.allocated_resource}</td>
+                <td>
+                  <button
+                    style={btnPrimary}
+                    onClick={() => onConfirm(t.task_id)}
+                  >
+                    Confirm
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
