@@ -197,36 +197,49 @@ return (
       gap: 20,
       marginTop: 20
     }}>
-      {resources.map((r, idx) => (
-        <div key={idx} style={{
-          border: "1px solid #ddd",
-          borderRadius: 8,
-          padding: 16,
-          background: "white",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.05)"
-        }}>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>
-            {r.resource}
-          </div>
+    {resources.map((r, idx) => (
+      <div key={idx} style={{
+        border: "1px solid #ddd",
+        borderRadius: 8,
+        padding: 16,
+        background: "white",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+        borderLeft: r.status === "Busy" ? "6px solid #e67e22" : "6px solid #27ae60"
+      }}>
 
-          <div style={{
-            color: r.status === "Busy" ? "#e67e22" : "#27ae60",
-            fontWeight: 600,
-            marginBottom: 10
-          }}>
-            {r.status === "Busy" ? "Busy" : "Waiting for Assignment"}
-          </div>
-
-          {r.status === "Busy" && (
-            <>
-              <div><b>Task:</b> #{r.task_no}</div>
-              <div><b>Product:</b> {r.product}</div>
-              <div><b>From:</b> {r.source_bin}</div>
-              <div><b>To:</b> {r.dest_bin}</div>
-            </>
-          )}
+        {/* Resource Code */}
+        <div style={{ fontWeight: 700, fontSize: 18 }}>
+          {r.resource_code}
         </div>
-      ))}
+
+        {/* Resource Name (Reach Truck / Pallet Jack / Fast Mover) */}
+        <div style={{ color: "#555", marginBottom: 6 }}>
+          {r.resource_name}
+        </div>
+
+        {/* Status */}
+        <div style={{
+          color: r.status === "Busy" ? "#e67e22" : "#27ae60",
+          fontWeight: 600,
+          marginBottom: 10
+        }}>
+          {r.status === "Busy" ? "Busy" : "Waiting for Assignment"}
+        </div>
+
+        {/* Task Details */}
+        {r.status === "Busy" ? (
+          <>
+            <div><b>Task No:</b> {r.task_no}</div>
+            <div><b>Product:</b> {r.product}</div>
+            <div><b>From:</b> {r.source_bin}</div>
+            <div><b>To:</b> {r.dest_bin}</div>
+          </>
+        ) : (
+          <div style={{ color: "#888" }}>No task assigned</div>
+        )}
+      </div>
+    ))}
+
     </div>
   </Section>
 )}
