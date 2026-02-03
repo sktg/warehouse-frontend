@@ -147,28 +147,40 @@ return (
       <Section title="Storage Bins">
         <div style={scrollBox}>
           <table style={table}>
+            <colgroup>
+              <col style={{ width: "35%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "25%" }} />
+              <col style={{ width: "20%" }} />
+            </colgroup>
+
             <thead>
               <tr>
-                <th>Bin Code</th>
-                <th>Capacity</th>
-                <th>Current Qty</th>
-                <th></th>
+                <th style={thtd}>Bin Code</th>
+                <th style={thtd}>Capacity</th>
+                <th style={thtd}>Current Qty</th>
+                <th style={thtd}></th>
               </tr>
             </thead>
+
             <tbody>
               {bins.map(b => (
                 <tr key={b.bin_code}>
-                  <td>{b.bin_code}</td>
-                  <td>{b.capacity}</td>
-                  <td>{b.current_qty}</td>
-                  <td>
-                    <button style={btnPrimary} onClick={() => refillBin(b.bin_code)}>
+                  <td style={thtd}>{b.bin_code}</td>
+                  <td style={thtd}>{b.capacity}</td>
+                  <td style={thtd}>{b.current_qty}</td>
+                  <td style={thtd}>
+                    <button
+                      style={btnPrimary}
+                      onClick={() => refillBin(b.bin_code)}
+                    >
                       Refill Capacity
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
+
           </table>
         </div>
       </Section>
