@@ -227,19 +227,22 @@ function OpenTasksSection({ tasks }) {
         <table style={table}>
           <thead>
             <tr>
-              <th>Order</th>
-              <th>Base Priority</th>
-              <th>Current Rank</th>
-              <th>Product</th>
-              <th>Qty</th>
+              <th style={thtd}>Order</th>
+              {isOpen && <th style={thtd}>Base Priority</th>}
+              {isOpen && <th style={thtd}>Current Rank</th>}
+              <th style={thtd}>Product</th>
+              <th style={thtd}>Qty</th>
+              {!isOpen && <th style={thtd}>Resource</th>}
+              {onConfirm && <th style={thtd}></th>}
             </tr>
           </thead>
           <tbody>
             {tasks.map(t => (
               <tr key={t.task_id}>
-                <td>{t.order_no}</td>
+                <td style={thtd}>{t.order_no}</td>
 
                 <td style={{
+                  ...thtd,
                   fontWeight: 600,
                   color:
                     t.base_priority === "P1" ? "red" :
@@ -249,15 +252,16 @@ function OpenTasksSection({ tasks }) {
                   {t.base_priority}
                 </td>
 
-                <td style={{ fontWeight: 600 }}>
+                <td style={{ ...thtd, fontWeight: 600 }}>
                   #{t.current_rank}
                 </td>
 
-                <td>{t.product}</td>
-                <td>{t.qty}</td>
+                <td style={thtd}>{t.product}</td>
+                <td style={thtd}>{t.qty}</td>
               </tr>
             ))}
           </tbody>
+
         </table>
       </div>
     </div>
@@ -351,7 +355,14 @@ const btnPrimary = {
 const table = {
   width: "100%",
   borderCollapse: "collapse",
+  tableLayout: "fixed",   // ⭐ CRITICAL
   background: "white"
+};
+
+const thtd = {
+  padding: "8px 6px",
+  textAlign: "left",
+  borderBottom: "1px solid #eee"
 };
 
 const taskContainer = {
@@ -365,8 +376,7 @@ const scrollBox = {
   height: "100%",
   overflowY: "auto",
   border: "1px solid #ddd",
-  background: "white",
-  padding: 10
+  background: "white"
 };
 
 
