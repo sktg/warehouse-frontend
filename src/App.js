@@ -213,8 +213,9 @@ function Card({ title, value, color }) {
 }
 
 
-
 function TaskSection({ title, tasks, onConfirm }) {
+  const isOpen = title === "Open Tasks";
+
   return (
     <div style={{ flex: 1 }}>
       <h3 style={{ marginBottom: 10 }}>{title}</h3>
@@ -222,25 +223,30 @@ function TaskSection({ title, tasks, onConfirm }) {
         <table style={table}>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Order</th>
               <th>Product</th>
               <th>Qty</th>
-              <th>Resource</th>
+              {!isOpen && <th>Resource</th>}
               {onConfirm && <th></th>}
             </tr>
           </thead>
           <tbody>
             {tasks.map(t => (
               <tr key={t.task_id}>
-                <td>{t.task_id}</td>
                 <td>{t.order_no}</td>
                 <td>{t.product}</td>
                 <td>{t.qty}</td>
-                <td>{t.allocated_resource || "-"}</td>
+
+                {!isOpen && (
+                  <td>{t.allocated_resource || "-"}</td>
+                )}
+
                 {onConfirm && (
                   <td>
-                    <button style={btnPrimary} onClick={() => onConfirm(t.task_id)}>
+                    <button
+                      style={btnPrimary}
+                      onClick={() => onConfirm(t.task_id)}
+                    >
                       Confirm
                     </button>
                   </td>
@@ -253,6 +259,7 @@ function TaskSection({ title, tasks, onConfirm }) {
     </div>
   );
 }
+
 
 
 /* ---------- Styles ---------- */
