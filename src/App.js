@@ -224,7 +224,6 @@ function OpenTasksSection({ tasks }) {
     <div style={{ flex: 1 }}>
       <h3 style={{ marginBottom: 10 }}>Open Tasks</h3>
       <div style={scrollBox}>
-        //fixed table layout to prevent stretching
         <table style={table}>
           <colgroup>
             <col style={{ width: "20%" }} />
@@ -281,7 +280,7 @@ function AllocatedTasksSection({ tasks, onConfirm }) {
     <div style={{ flex: 1 }}>
       <h3 style={{ marginBottom: 10 }}>Allocated Tasks</h3>
       <div style={scrollBox}>
-        //fixed table layout to prevent stretching
+
         <table style={table}>
           <colgroup>
             <col style={{ width: "25%" }} />
