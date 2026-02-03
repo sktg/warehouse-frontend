@@ -199,7 +199,7 @@ return (
     }}>
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
         gap: 16
       }}>
 
@@ -284,18 +284,19 @@ function Tab({ active, label, onClick }) {
 function Card({ title, value, color }) {
   return (
     <div style={{
-      flex: 1,
+      flex: "1 1 220px",   // ⭐ allows wrapping
       background: color,
       color: "white",
-      padding: "25px 20px",
+      padding: "18px 14px",
       borderRadius: 8,
-      fontSize: 16
+      fontSize: 14
     }}>
       <div>{title}</div>
-      <div style={{ fontSize: 32, marginTop: 10 }}>{value}</div>
+      <div style={{ fontSize: 26, marginTop: 8 }}>{value}</div>
     </div>
   );
 }
+
 
 //added base priority and current rank columns for open tasks
 function OpenTasksSection({ tasks }) {
@@ -409,49 +410,62 @@ function AllocatedTasksSection({ tasks, onConfirm }) {
 
 const page = {
   fontFamily: "Segoe UI, sans-serif",
-  padding: "20px 40px",
+  padding: "16px",
   background: "#f4f6f8",
   minHeight: "100vh",
+  boxSizing: "border-box"
 };
+
 
 const tabs = {
   display: "flex",
-  gap: 30,
+  flexWrap: "wrap",
+  gap: 12,
   marginBottom: 20
 };
+
 
 const cardsRow = {
   display: "flex",
-  gap: 20,
+  flexWrap: "wrap",
+  gap: 12,
   marginBottom: 20
 };
 
+
 const controls = {
   display: "flex",
-  alignItems: "center",
+  flexWrap: "wrap",
   gap: 10,
   marginBottom: 15
 };
 
+
 const select = {
-  padding: "6px 10px",
-  borderRadius: 4
+  padding: "8px",
+  borderRadius: 4,
+  flex: "1 1 160px"
 };
 
+
 const btnPrimary = {
-  padding: "8px 14px",
+  padding: "8px 12px",
   background: "#3498db",
   color: "white",
   border: "none",
   borderRadius: 4,
-  cursor: "pointer"
+  cursor: "pointer",
+  flex: "1 1 160px"
 };
+
 
 const table = {
   width: "100%",
   borderCollapse: "collapse",
-  tableLayout: "fixed",   // ⭐ CRITICAL
-  background: "white"
+  tableLayout: "fixed",
+  background: "white",
+  fontSize: "14px",
+  minWidth: "600px"   // ⭐ forces horizontal scroll on phone
 };
 
 const thtd = {
@@ -462,17 +476,20 @@ const thtd = {
 
 const taskContainer = {
   display: "flex",
-  gap: 30,
-  marginTop: 10,
-  height: "58vh"
+  flexWrap: "wrap",
+  gap: 20,
+  marginTop: 10
 };
 
+
 const scrollBox = {
-  height: "100%",
+  width: "100%",
+  overflowX: "auto",
   overflowY: "auto",
   border: "1px solid #ddd",
   background: "white"
 };
+
 
 
 export default App;
