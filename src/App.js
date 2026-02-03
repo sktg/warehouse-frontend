@@ -149,14 +149,21 @@ return (
 
     {activeTab === "inventory" && (
       <Section title="Storage Bins">
-        <div style={scrollBox}>
+        <div style={{
+          ...scrollBox,
+          padding: "16px 24px",     // ⭐ adds breathing room
+          display: "flex",
+          justifyContent: "center"  // ⭐ centers the table
+        }}>
           <table style={table}>
+
             <colgroup>
-              <col style={{ width: "35%" }} />
-              <col style={{ width: "20%" }} />
-              <col style={{ width: "25%" }} />
-              <col style={{ width: "20%" }} />
+              <col style={{ width: "28%" }} />
+              <col style={{ width: "14%" }} />
+              <col style={{ width: "14%" }} />
+              <col style={{ width: "18%" }} />
             </colgroup>
+
 
             <thead>
               <tr>
@@ -175,10 +182,10 @@ return (
                   <td style={thtd}>{b.current_qty}</td>
                   <td style={thtd}>
                     <button
-                      style={btnPrimary}
+                      style={btnSmall}
                       onClick={() => refillBin(b.bin_code)}
                     >
-                      Refill Capacity
+                      Refill
                     </button>
                   </td>
                 </tr>
@@ -458,6 +465,17 @@ const btnPrimary = {
   flex: "1 1 160px"
 };
 
+const btnSmall = {
+  padding: "4px 10px",
+  fontSize: 12,
+  background: "#3498db",
+  color: "white",
+  border: "none",
+  borderRadius: 4,
+  cursor: "pointer",
+  flex: "none"      // ⭐ critical — stops stretching
+};
+
 
 const table = {
   width: "100%",
@@ -469,10 +487,12 @@ const table = {
 };
 
 const thtd = {
-  padding: "8px 6px",
+  padding: "6px 10px",
   textAlign: "left",
-  borderBottom: "1px solid #eee"
+  borderBottom: "1px solid #eee",
+  whiteSpace: "nowrap"
 };
+
 
 const taskContainer = {
   display: "flex",
