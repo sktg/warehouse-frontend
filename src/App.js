@@ -192,16 +192,23 @@ return (
     {activeTab === "resources" && (
   <Section title="Resource Status">
     <div style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-      gap: 20,
-      marginTop: 20
+      ...scrollBox,
+      height: "60vh",          // ⭐ fixed height
+      overflowY: "auto",
+      paddingRight: 10
     }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+        gap: 16
+      }}>
+
     {resources.map((r, idx) => (
       <div key={idx} style={{
         border: "1px solid #ddd",
         borderRadius: 8,
-        padding: 16,
+        padding: 12,
+        fontSize: 14,
         background: "white",
         boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
         borderLeft: r.status === "Busy" ? "6px solid #e67e22" : "6px solid #27ae60"
@@ -240,7 +247,8 @@ return (
       </div>
     ))}
 
-    </div>
+      </div>   {/* grid */}
+    </div>     {/* scroll */}
   </Section>
 )}
 
@@ -281,7 +289,7 @@ function Card({ title, value, color }) {
       color: "white",
       padding: "25px 20px",
       borderRadius: 8,
-      fontSize: 18
+      fontSize: 16
     }}>
       <div>{title}</div>
       <div style={{ fontSize: 32, marginTop: 10 }}>{value}</div>
@@ -403,8 +411,7 @@ const page = {
   fontFamily: "Segoe UI, sans-serif",
   padding: "20px 40px",
   background: "#f4f6f8",
-  height: "100vh",
-  overflow: "hidden"
+  minHeight: "100vh",
 };
 
 const tabs = {
