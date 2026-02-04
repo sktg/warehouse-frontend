@@ -316,17 +316,22 @@ function ResourceDashboard({ code, goBack, confirmTask, allocateTasks }) {
           <button
             style={btnPrimary}
             onClick={async () => {
-              const ok = await confirmTask(data.current_task.task_id);
+              const res = await fetch(`${BASE_URL}/confirm_task/${data.current_task.task_id}`, { method: "POST" });
+              const result = await res.json();
 
-              if (!ok) return;   // ⭐ stop if error
+              if (result.error) {
+                alert(result.error);
+              }
 
-              const res = await fetch(`${BASE_URL}/resource/${code}`);
-              const fresh = await res.json();
-              setData(fresh);
+              // ⭐ RELOAD resource data after confirm
+              fetch(`${BASE_URL}/resource/${code}`)
+                .then(r => r.json())
+                .then(setData);
             }}
           >
             Confirm
           </button>
+
 
         </>
       ) : (
