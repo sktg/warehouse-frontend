@@ -36,16 +36,10 @@ const loadAll = useCallback(() => {
 }, []);
 
 
-//refresh every 15 seconds for priority updates
 useEffect(() => {
   loadAll();
-
-  const interval = setInterval(() => {
-    loadAll();
-  }, 15000);
-
-  return () => clearInterval(interval);
 }, [loadAll]);
+
 
   // ✅ Wait for backend before refresh
 const createOrder = async () => {
@@ -106,9 +100,33 @@ return (
 
     {/* Tabs */}
     <div style={tabs}>
-      <Tab active={activeTab === "tasks"} label="Tasks" onClick={() => setActiveTab("tasks")} />
-      <Tab active={activeTab === "inventory"} label="Inventory" onClick={() => setActiveTab("inventory")} />
-      <Tab active={activeTab === "resources"} label="Resources" onClick={() => setActiveTab("resources")} />
+    <Tab
+      active={activeTab === "tasks"}
+      label="Tasks"
+      onClick={() => {
+        setActiveTab("tasks");
+        loadAll();        // ⭐ refresh
+      }}
+    />
+
+    <Tab
+      active={activeTab === "inventory"}
+      label="Inventory"
+      onClick={() => {
+        setActiveTab("inventory");
+        loadAll();
+      }}
+    />
+
+    <Tab
+      active={activeTab === "resources"}
+      label="Resources"
+      onClick={() => {
+        setActiveTab("resources");
+        loadAll();
+      }}
+    />
+
     </div>
 
     {/* Cards */}
