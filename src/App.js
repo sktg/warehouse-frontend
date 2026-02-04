@@ -50,10 +50,22 @@ function App() {
     loadAll();
   };
 
-  const confirmTask = async (id) => {
-    await fetch(`${BASE_URL}/confirm_task/${id}`, { method: "POST" });
-    loadAll();
-  };
+const confirmTask = async (id) => {
+  const res = await fetch(`${BASE_URL}/confirm_task/${id}`, {
+    method: "POST"
+  });
+
+  const data = await res.json();
+
+  if (data.error) {
+    alert("❌ " + data.error);
+    return false;     // ⭐ tell caller it failed
+  }
+
+  loadAll();
+  return true;        // ⭐ tell caller it worked
+};
+
 
   const refillBin = async (code) => {
     await fetch(`${BASE_URL}/refill_bin/${code}`, { method: "POST" });
@@ -302,9 +314,10 @@ function ResourceDashboard({ code, goBack, confirmTask, allocateTasks }) {
           <button
             style={btnPrimary}
             onClick={async () => {
-              await confirmTask(data.current_task.task_id);
+              const ok = await confirmTask(data.current_task.task_id);
 
-              // ⭐ refresh THIS dashboard
+              if (!ok) return;   // ⭐ stop if error
+
               const res = await fetch(`${BASE_URL}/resource/${code}`);
               const fresh = await res.json();
               setData(fresh);
@@ -312,6 +325,7 @@ function ResourceDashboard({ code, goBack, confirmTask, allocateTasks }) {
           >
             Confirm
           </button>
+
         </>
       ) : (
         <button
@@ -319,7 +333,6 @@ function ResourceDashboard({ code, goBack, confirmTask, allocateTasks }) {
           onClick={async () => {
             await allocateTasks();
 
-            // ⭐ refresh THIS dashboard
             const res = await fetch(`${BASE_URL}/resource/${code}`);
             const fresh = await res.json();
             setData(fresh);
@@ -327,6 +340,7 @@ function ResourceDashboard({ code, goBack, confirmTask, allocateTasks }) {
         >
           Allocate Task
         </button>
+
       )}
 
 
