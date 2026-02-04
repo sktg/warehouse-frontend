@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 
+
+
 const BASE_URL = "https://warehouse-backend-k1u4.onrender.com";
 
 function App() {
@@ -11,6 +13,7 @@ function App() {
   const [priority, setPriority] = useState("P3");
   const [openFilter, setOpenFilter] = useState("");
   const [allocFilter, setAllocFilter] = useState("");
+  const [selectedResource, setSelectedResource] = useState(null);
 
   const safeFetch = async (url, setter) => {
     try {
@@ -57,98 +60,114 @@ function App() {
     loadAll();
   };
 
-  return (
-    <div style={page}>
-      <div style={content}>
+return (
+  <div style={page}>
+    <div style={content}>
 
-        {/* Tabs */}
-        <div style={tabs}>
-          <Tab label="Tasks" active={activeTab==="tasks"} onClick={()=>{setActiveTab("tasks");loadAll();}}/>
-          <Tab label="Inventory" active={activeTab==="inventory"} onClick={()=>{setActiveTab("inventory");loadAll();}}/>
-          <Tab label="Resources" active={activeTab==="resources"} onClick={()=>{setActiveTab("resources");loadAll();}}/>
-        </div>
+      {selectedResource ? (
+        <ResourceDashboard
+          code={selectedResource}
+          goBack={() => setSelectedResource(null)}
+          confirmTask={confirmTask}
+          allocateTasks={allocateTasks}
+        />
+      ) : (
+        <>
+          <div style={tabs}>
+            <Tab label="Tasks" active={activeTab==="tasks"} onClick={()=>{setActiveTab("tasks");loadAll();}}/>
+            <Tab label="Inventory" active={activeTab==="inventory"} onClick={()=>{setActiveTab("inventory");loadAll();}}/>
+            <Tab label="Resources" active={activeTab==="resources"} onClick={()=>{setActiveTab("resources");loadAll();}}/>
+          </div>
 
-        {/* Cards */}
-        <div style={cardsRow}>
-          <Card title="Open Tasks" value={data.open_tasks} color="#f39c12" />
-          <Card title="Assigned Tasks" value={data.assigned_tasks} color="#3498db" />
-          <Card title="Completed Tasks" value={data.completed_tasks} color="#27ae60" />
-          <Card title="Utilization %" value={data.resource_utilization_percent} color="#8e44ad" />
-        </div>
+          <div style={cardsRow}>
+            <Card title="Open Tasks" value={data.open_tasks} color="#f39c12" />
+            <Card title="Assigned Tasks" value={data.assigned_tasks} color="#3498db" />
+            <Card title="Completed Tasks" value={data.completed_tasks} color="#27ae60" />
+            <Card title="Utilization %" value={data.resource_utilization_percent} color="#8e44ad" />
+          </div>
 
-        {activeTab==="tasks" && (
-          <>
-            <div style={controls}>
-              <select value={priority} onChange={e=>setPriority(e.target.value)} style={select}>
-                <option value="P1">P1 (VIP)</option>
-                <option value="P2">P2</option>
-                <option value="P3">P3</option>
-                <option value="P4">P4</option>
-                <option value="P5">P5</option>
-              </select>
-              <button style={btnPrimary} onClick={createOrder}>Create Order</button>
-              <button style={btnPrimary} onClick={allocateTasks}>Allocate Tasks</button>
-            </div>
+          {activeTab==="tasks" && (
+            <>
+              <div style={controls}>
+                <select value={priority} onChange={e=>setPriority(e.target.value)} style={select}>
+                  <option value="P1">P1 (VIP)</option>
+                  <option value="P2">P2</option>
+                  <option value="P3">P3</option>
+                  <option value="P4">P4</option>
+                  <option value="P5">P5</option>
+                </select>
+                <button style={btnPrimary} onClick={createOrder}>Create Order</button>
+                <button style={btnPrimary} onClick={allocateTasks}>Allocate Tasks</button>
+              </div>
 
-            <div style={taskContainer}>
-              <OpenTasksSection tasks={tasks.filter(t=>t.status==="OPEN")} filter={openFilter} setFilter={setOpenFilter}/>
-              <AllocatedTasksSection tasks={tasks.filter(t=>t.status==="ALLOCATED")} filter={allocFilter} setFilter={setAllocFilter} onConfirm={confirmTask}/>
-            </div>
-          </>
-        )}
+              <div style={taskContainer}>
+                <OpenTasksSection tasks={tasks.filter(t=>t.status==="OPEN")} filter={openFilter} setFilter={setOpenFilter}/>
+                <AllocatedTasksSection tasks={tasks.filter(t=>t.status==="ALLOCATED")} filter={allocFilter} setFilter={setAllocFilter} onConfirm={confirmTask}/>
+              </div>
+            </>
+          )}
 
-        {activeTab==="inventory" && (
-          <Section title="Storage Bins">
-            <div style={scrollBox}>
-              <table style={table}>
-                <thead>
-                  <tr>
-                    <th style={th}>Bin Code</th>
-                    <th style={th}>Capacity</th>
-                    <th style={th}>Current Qty</th>
-                    <th style={th}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bins.map(b=>(
-                    <tr key={b.bin_code}>
-                      <td style={td}>{b.bin_code}</td>
-                      <td style={td}>{b.capacity}</td>
-                      <td style={td}>{b.current_qty}</td>
-                      <td style={td}><button style={btnSmall} onClick={()=>refillBin(b.bin_code)}>Refill</button></td>
+          {activeTab==="inventory" && (
+            <Section title="Storage Bins">
+              <div style={scrollBox}>
+                <table style={table}>
+                  <thead>
+                    <tr>
+                      <th style={th}>Bin Code</th>
+                      <th style={th}>Capacity</th>
+                      <th style={th}>Current Qty</th>
+                      <th style={th}></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Section>
-        )}
+                  </thead>
+                  <tbody>
+                    {bins.map(b=>(
+                      <tr key={b.bin_code}>
+                        <td style={td}>{b.bin_code}</td>
+                        <td style={td}>{b.capacity}</td>
+                        <td style={td}>{b.current_qty}</td>
+                        <td style={td}><button style={btnSmall} onClick={()=>refillBin(b.bin_code)}>Refill</button></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Section>
+          )}
 
-        {activeTab==="resources" && (
-          <Section title="Resource Status">
-            <div style={resourceGrid}>
-              {resources.map((r,i)=>(
-                <div key={i} style={resourceCard(r.status)}>
-                  <div style={{fontWeight:700,fontSize:18}}>{r.resource_code}</div>
-                  <div style={{color:"#555"}}>{r.resource_name}</div>
-                  <div style={{margin:"8px 0",fontWeight:600}}>{r.status}</div>
-                  {r.status==="Busy" ? (
-                    <>
-                      <div><b>Task ID:</b> {r.task_no}</div>
-                      <div><b>Product:</b> {r.product}</div>
-                      <div><b>From:</b> {r.source_bin}</div>
-                      <div><b>To:</b> {r.dest_bin}</div>
-                    </>
-                  ):<div style={{color:"#888"}}>No task assigned</div>}
-                </div>
-              ))}
-            </div>
-          </Section>
-        )}
+          {activeTab==="resources" && (
+            <Section title="Resource Status">
+              <div style={resourceGrid}>
+                {resources.map((r,i)=>(
+                  <div
+                    key={i}
+                    onClick={() => setSelectedResource(r.resource_code)}
+                    style={{ ...resourceCard(r.status), cursor: "pointer" }}
+                  >
+                    <div style={{fontWeight:700,fontSize:18}}>{r.resource_code}</div>
+                    <div style={{color:"#555"}}>{r.resource_name}</div>
+                    <div style={{margin:"8px 0",fontWeight:600}}>{r.status}</div>
 
-      </div>
+                    {r.status==="Busy" ? (
+                      <>
+                        <div><b>Task ID:</b> {r.task_no}</div>
+                        <div><b>Product:</b> {r.product}</div>
+                        <div><b>From:</b> {r.source_bin}</div>
+                        <div><b>To:</b> {r.dest_bin}</div>
+                      </>
+                    ) : (
+                      <div style={{color:"#888"}}>No task assigned</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Section>
+          )}
+        </>
+      )}
+
     </div>
-  );
+  </div>
+);
 }
 
 /* ---------- Components ---------- */
@@ -250,6 +269,88 @@ function AllocatedTasksSection({tasks,filter,setFilter,onConfirm}) {
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+function ResourceDashboard({ code, goBack, confirmTask, allocateTasks }) {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/resource/${code}`)
+      .then(r => r.json())
+      .then(setData);
+  }, [code]);
+
+  if (!data) return <div>Loading...</div>;
+
+  return (
+    <div style={sectionCard}>
+      <button style={btnSmall} onClick={goBack}>← Back</button>
+
+      <h2>Resource {code}</h2>
+      <p><b>Total Tasks Completed:</b> {data.total_completed}</p>
+
+      {data.current_task ? (
+        <>
+          <h3>Current Task</h3>
+          <div>Task ID: {data.current_task.task_no}</div>
+          <div>Product: {data.current_task.product}</div>
+          <div>From: {data.current_task.source_bin}</div>
+          <div>To: {data.current_task.dest_bin}</div>
+
+          <button
+            style={btnPrimary}
+            onClick={async () => {
+              await confirmTask(data.current_task.task_id);
+
+              // ⭐ refresh THIS dashboard
+              const res = await fetch(`${BASE_URL}/resource/${code}`);
+              const fresh = await res.json();
+              setData(fresh);
+            }}
+          >
+            Confirm
+          </button>
+        </>
+      ) : (
+        <button
+          style={btnPrimary}
+          onClick={async () => {
+            await allocateTasks();
+
+            // ⭐ refresh THIS dashboard
+            const res = await fetch(`${BASE_URL}/resource/${code}`);
+            const fresh = await res.json();
+            setData(fresh);
+          }}
+        >
+          Allocate Task
+        </button>
+      )}
+
+
+      <h3 style={{marginTop:20}}>Task History</h3>
+      <table style={table}>
+        <thead>
+          <tr>
+            <th style={th}>Task ID</th>
+            <th style={th}>Product</th>
+            <th style={th}>Qty</th>
+            <th style={th}>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.history.map((t,i)=>(
+            <tr key={i}>
+              <td style={td}>{t.task_no}</td>
+              <td style={td}>{t.product}</td>
+              <td style={td}>{t.qty}</td>
+              <td style={td}>{t.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
