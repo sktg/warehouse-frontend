@@ -157,20 +157,15 @@ return (
         }}>
           <table style={table}>
 
-            <colgroup>
-              <col style={{ width: "28%" }} />
-              <col style={{ width: "14%" }} />
-              <col style={{ width: "14%" }} />
-              <col style={{ width: "18%" }} />
-            </colgroup>
+
 
 
             <thead>
               <tr>
-                <th style={thtd}>Bin Code</th>
-                <th style={thtd}>Capacity</th>
-                <th style={thtd}>Current Qty</th>
-                <th style={thtd}></th>
+                <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Bin Code</th>
+                <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Capacity</th>
+                <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Current Qty</th>
+                <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}></th>
               </tr>
             </thead>
 
@@ -312,21 +307,15 @@ function OpenTasksSection({ tasks }) {
       <h3 style={{ marginBottom: 10 }}>Open Tasks</h3>
       <div style={scrollBox}>
         <table style={table}>
-          <colgroup>
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "25%" }} />
-            <col style={{ width: "15%" }} />
-          </colgroup>
+
 
           <thead>
             <tr>
-              <th style={thtd}>Order</th>
-              <th style={thtd}>Base Priority</th>
-              <th style={thtd}>Current Rank</th>
-              <th style={thtd}>Product</th>
-              <th style={thtd}>Qty</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Order</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Base Priority</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Current Rank</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Product</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Qty</th>
             </tr>
           </thead>
 
@@ -369,21 +358,15 @@ function AllocatedTasksSection({ tasks, onConfirm }) {
       <div style={scrollBox}>
 
         <table style={table}>
-          <colgroup>
-            <col style={{ width: "25%" }} />
-            <col style={{ width: "25%" }} />
-            <col style={{ width: "15%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "15%" }} />
-          </colgroup>
+
 
           <thead>
             <tr>
-              <th style={thtd}>Order</th>
-              <th style={thtd}>Product</th>
-              <th style={thtd}>Qty</th>
-              <th style={thtd}>Resource</th>
-              <th style={thtd}></th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Order</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Product</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Qty</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Resource</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}></th>
             </tr>
           </thead>
 
@@ -480,17 +463,15 @@ const btnSmall = {
 const table = {
   width: "100%",
   borderCollapse: "collapse",
-  tableLayout: "fixed",
   background: "white",
-  fontSize: "14px",
-  minWidth: "600px"   // ⭐ forces horizontal scroll on phone
+  fontSize: "14px"
 };
 
 const thtd = {
   padding: "6px 10px",
   textAlign: "left",
   borderBottom: "1px solid #eee",
-  whiteSpace: "nowrap"
+  wordBreak: "break-word"
 };
 
 
@@ -505,7 +486,6 @@ const taskContainer = {
 const scrollBox = {
   width: "100%",
   overflowX: "auto",
-  overflowY: "auto",
   border: "1px solid #ddd",
   background: "white"
 };
