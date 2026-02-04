@@ -245,7 +245,7 @@ return (
         {/* Task Details */}
         {r.status === "Busy" ? (
           <>
-            <div><b>Task No:</b> {r.task_no}</div>
+            <div><b>Task ID:</b> {r.task_no}</div>
             <div><b>Product:</b> {r.product}</div>
             <div><b>From:</b> {r.source_bin}</div>
             <div><b>To:</b> {r.dest_bin}</div>
