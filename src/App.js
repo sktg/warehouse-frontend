@@ -298,7 +298,9 @@ function ResourceDashboard({ code, goBack, confirmTask, allocateTasks }) {
 
   return (
     <div style={sectionCard}>
+      {goBack && (
       <button style={btnSmall} onClick={goBack}>← Back</button>
+      )}
 
       <h2>Resource {code}</h2>
       <p><b>Total Tasks Completed:</b> {data.total_completed}</p>
@@ -402,10 +404,10 @@ function ResourcePage() {
   const { code } = useParams();
 
   return (
-    <div style={{padding:30,fontFamily:"Segoe UI"}}>
+    <div style={{ padding: 30 }}>
       <ResourceDashboard
         code={code}
-        goBack={() => window.location.href = "/"}
+        goBack={null}   // ⭐ no back allowed
         confirmTask={async (id) => {
           const res = await fetch(`${BASE_URL}/confirm_task/${id}`, { method: "POST" });
           const data = await res.json();
@@ -417,8 +419,8 @@ function ResourcePage() {
       />
     </div>
   );
-
 }
+
 
 function App() {
   return (
