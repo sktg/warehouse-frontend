@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
-
+import { Routes, Route, useParams } from "react-router-dom";
 
 
 const BASE_URL = "https://warehouse-backend-k1u4.onrender.com";
 
-function App() {
+function SupervisorDashboard() {
   const [resources, setResources] = useState([]);
   const [activeTab, setActiveTab] = useState("tasks");
   const [data, setData] = useState({});
@@ -396,4 +396,37 @@ const resourceCard=(status)=>({
   borderLeft: status==="Busy"?"6px solid #e67e22":"6px solid #27ae60"
 });
 
-export default App;
+
+
+function ResourcePage() {
+  const { code } = useParams();
+
+  return (
+    <div style={{padding:30,fontFamily:"Segoe UI"}}>
+      <ResourceDashboard
+        code={code}
+        goBack={() => window.location.href = "/"}
+        confirmTask={async (id) => {
+          const res = await fetch(`${BASE_URL}/confirm_task/${id}`, { method: "POST" });
+          const data = await res.json();
+          if (data.error) alert(data.error);
+        }}
+        allocateTasks={async () => {
+          await fetch(`${BASE_URL}/allocate_tasks`, { method: "POST" });
+        }}
+      />
+    </div>
+  );
+
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<SupervisorDashboard />} />
+      <Route path="/resource/:code" element={<ResourcePage />} />
+    </Routes>
+  );
+}
+
+  export default App;
