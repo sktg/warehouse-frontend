@@ -13,6 +13,8 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [bins, setBins] = useState([]);
   const [priority, setPriority] = useState("P3");
+  const [openFilter, setOpenFilter] = useState("");
+  const [allocFilter, setAllocFilter] = useState("");
 
   // ✅ Safe fetch helper (prevents JSON crash)
   const safeFetch = async (url, setter) => {
@@ -137,12 +139,17 @@ return (
         <div style={taskContainer}>
         <OpenTasksSection
           tasks={tasks.filter(t => t.status === "OPEN")}
+          filter={openFilter}
+          setFilter={setOpenFilter}
         />
 
         <AllocatedTasksSection
           tasks={tasks.filter(t => t.status === "ALLOCATED")}
+          filter={allocFilter}
+          setFilter={setAllocFilter}
           onConfirm={confirmTask}
         />
+
         </div>
       </>
     )}
@@ -301,16 +308,29 @@ function Card({ title, value, color }) {
 
 
 //added base priority and current rank columns for open tasks
-function OpenTasksSection({ tasks }) {
+function OpenTasksSection({ tasks, filter, setFilter }) {
   return (
     <div style={{ flex: 1 }}>
       <h3 style={{ marginBottom: 10 }}>Open Tasks</h3>
+
+      <input
+        placeholder="Filter tasks..."
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        style={{
+          marginBottom: 8,
+          padding: 6,
+          width: "100%",
+          borderRadius: 4,
+          border: "1px solid #ccc"
+        }}
+      />
+
       <div style={scrollBox}>
         <table style={table}>
-
-
           <thead>
             <tr>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Task ID</th>
               <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Order</th>
               <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Base Priority</th>
               <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Current Rank</th>
@@ -320,49 +340,65 @@ function OpenTasksSection({ tasks }) {
           </thead>
 
           <tbody>
-            {tasks.map(t => (
-              <tr key={t.task_id}>
-                <td style={thtd}>{t.order_no}</td>
+            {tasks
+              .filter(t =>
+                JSON.stringify(t).toLowerCase().includes(filter.toLowerCase())
+              )
+              .map(t => (
+                <tr key={t.task_id}>
+                  <td style={thtd}>{t.task_no}</td>
+                  <td style={thtd}>{t.order_no}</td>
 
-                <td style={{
-                  ...thtd,
-                  fontWeight: 600,
-                  color:
-                    t.base_priority === "P1" ? "red" :
-                    t.base_priority === "P2" ? "orange" :
-                    "#444"
-                }}>
-                  {t.base_priority}
-                </td>
+                  <td style={{
+                    ...thtd,
+                    fontWeight: 600,
+                    color:
+                      t.base_priority === "P1" ? "red" :
+                      t.base_priority === "P2" ? "orange" :
+                      "#444"
+                  }}>
+                    {t.base_priority}
+                  </td>
 
-                <td style={{ ...thtd, fontWeight: 600 }}>
-                  #{t.current_rank}
-                </td>
+                  <td style={{ ...thtd, fontWeight: 600 }}>
+                    #{t.current_rank}
+                  </td>
 
-                <td style={thtd}>{t.product}</td>
-                <td style={thtd}>{t.qty}</td>
-              </tr>
-            ))}
+                  <td style={thtd}>{t.product}</td>
+                  <td style={thtd}>{t.qty}</td>
+                </tr>
+              ))}
           </tbody>
-
         </table>
       </div>
     </div>
   );
 }
 
-function AllocatedTasksSection({ tasks, onConfirm }) {
+
+function AllocatedTasksSection({ tasks, filter, setFilter, onConfirm }) {
   return (
     <div style={{ flex: 1 }}>
       <h3 style={{ marginBottom: 10 }}>Allocated Tasks</h3>
+
+      <input
+        placeholder="Filter tasks..."
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        style={{
+          marginBottom: 8,
+          padding: 6,
+          width: "100%",
+          borderRadius: 4,
+          border: "1px solid #ccc"
+        }}
+      />
+
       <div style={scrollBox}>
-
         <table style={table}>
-
-
           <thead>
             <tr>
-              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Order</th>
+              <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Task ID</th>
               <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Product</th>
               <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Qty</th>
               <th style={{ ...thtd, fontSize: 13, fontWeight: 600 }}>Resource</th>
@@ -371,22 +407,26 @@ function AllocatedTasksSection({ tasks, onConfirm }) {
           </thead>
 
           <tbody>
-            {tasks.map(t => (
-              <tr key={t.task_id}>
-                <td>{t.order_no}</td>
-                <td>{t.product}</td>
-                <td>{t.qty}</td>
-                <td>{t.allocated_resource}</td>
-                <td>
-                  <button
-                    style={btnPrimary}
-                    onClick={() => onConfirm(t.task_id)}
-                  >
-                    Confirm
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {tasks
+              .filter(t =>
+                JSON.stringify(t).toLowerCase().includes(filter.toLowerCase())
+              )
+              .map(t => (
+                <tr key={t.task_id}>
+                  <td style={thtd}>{t.task_no}</td>
+                  <td style={thtd}>{t.product}</td>
+                  <td style={thtd}>{t.qty}</td>
+                  <td style={thtd}>{t.allocated_resource}</td>
+                  <td>
+                    <button
+                      style={btnPrimary}
+                      onClick={() => onConfirm(t.task_id)}
+                    >
+                      Confirm
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
