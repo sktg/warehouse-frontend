@@ -5,6 +5,9 @@ import { Routes, Route, useParams } from "react-router-dom";
 const BASE_URL = "https://warehouse-backend-k1u4.onrender.com";
 
 function SupervisorDashboard() {
+
+  const [orders, setOrders] = useState([]);
+  const [completedOrders, setCompletedOrders] = useState([]);
   const [resources, setResources] = useState([]);
   const [activeTab, setActiveTab] = useState("tasks");
   const [data, setData] = useState({});
@@ -30,6 +33,10 @@ function SupervisorDashboard() {
     safeFetch(`${BASE_URL}/tasks`, setTasks);
     safeFetch(`${BASE_URL}/bins`, setBins);
     safeFetch(`${BASE_URL}/resource_status`, setResources);
+
+    safeFetch(`${BASE_URL}/orders`, setOrders);
+    safeFetch(`${BASE_URL}/completed_orders`, setCompletedOrders);
+
   }, []);
 
   useEffect(() => {
@@ -86,10 +93,58 @@ return (
       ) : (
         <>
           <div style={tabs}>
-            <Tab label="Tasks" active={activeTab==="tasks"} onClick={()=>{setActiveTab("tasks");loadAll();}}/>
-            <Tab label="Inventory" active={activeTab==="inventory"} onClick={()=>{setActiveTab("inventory");loadAll();}}/>
-            <Tab label="Resources" active={activeTab==="resources"} onClick={()=>{setActiveTab("resources");loadAll();}}/>
+            <Tab label="Tasks" active={activeTab==="tasks"} onClick={() => setActiveTab("tasks")}/>
+            <Tab label="Inventory" active={activeTab==="inventory"} onClick={() => setActiveTab("inventory")}/>
+            <Tab label="Resources" active={activeTab==="resources"} onClick={() => setActiveTab("resources")}/>
+            <Tab
+              label="Orders"
+              active={activeTab === "orders"}
+              onClick={() => setActiveTab("orders")}
+
+            />
+
           </div>
+
+          <Section title="Completed Orders">
+          <div style={scrollBox}>
+            <table style={table}>
+              <thead>
+                <tr>
+                  <th style={th}>Order No</th>
+                  <th style={th}>Priority</th>
+                  <th style={th}>Items</th>
+                  <th style={th}>Raised Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {completedOrders.length === 0 && (
+                  <tr>
+                    <td style={td} colSpan={4}>No completed orders yet</td>
+                  </tr>
+                )}
+
+                {completedOrders.map(o => (
+                  <tr key={o.order_no}>
+                    <td style={td}>{o.order_no}</td>
+                    <td style={td}>{o.priority}</td>
+                    <td
+                      style={{
+                        ...td,
+                        fontWeight: 600,
+                        color: "#27ae60"
+                      }}
+                    >
+                      {o.completed_items}/{o.total_items} ✅
+                    </td>
+
+                    <td style={td}>{o.raised_time}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          </Section>
+
 
           <div style={cardsRow}>
             <Card title="Open Tasks" value={data.open_tasks} color="#f39c12" />
@@ -174,6 +229,64 @@ return (
               </div>
             </Section>
           )}
+          {activeTab === "orders" && (
+          <Section title="Orders Overview">
+            <div style={scrollBox}>
+              <table style={table}>
+                <thead>
+                  <tr>
+                    <th style={th}>Order No</th>
+                    <th style={th}>Priority</th>
+                    <th style={th}>Order Status</th>
+                    <th style={th}>Raised Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {orders.length === 0 && (
+                    <tr>
+                      <td colSpan={4} style={td}>
+                        No orders found
+                      </td>
+                    </tr>
+                  )}
+
+                  {orders
+                    .slice()
+                    .sort((a, b) =>
+                      (a.completed_items === a.total_items) -
+                      (b.completed_items === b.total_items)
+                    )
+                    .map(o => (
+
+
+                    <tr key={o.order_no}>
+                      <td style={td}>{o.order_no}</td>
+                      <td style={td}>{o.priority}</td>
+                      <td
+                        style={{
+                          ...td,
+                          fontWeight: 600,
+                          color: o.status === "CONFIRMED"
+                            ? "#27ae60"   // green
+                            : "#e67e22"   // orange
+                        }}
+                      >
+                        {o.completed_items}/{o.total_items}
+                        {o.status === "CONFIRMED" && " ✅"}
+                      </td>
+
+
+                      <td style={td}>{o.raised_time}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Section>
+        )}
+
+
         </>
       )}
 
