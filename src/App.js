@@ -7,7 +7,7 @@ const BASE_URL = "https://warehouse-backend-k1u4.onrender.com";
 function SupervisorDashboard() {
 
   const [orders, setOrders] = useState([]);
-  const [completedOrders, setCompletedOrders] = useState([]);
+
   const [resources, setResources] = useState([]);
   const [activeTab, setActiveTab] = useState("tasks");
   const [data, setData] = useState({});
@@ -35,7 +35,7 @@ function SupervisorDashboard() {
     safeFetch(`${BASE_URL}/resource_status`, setResources);
 
     safeFetch(`${BASE_URL}/orders`, setOrders);
-    safeFetch(`${BASE_URL}/completed_orders`, setCompletedOrders);
+ 
 
   }, []);
 
@@ -112,12 +112,13 @@ return (
             <Card title="Open Tasks" value={data.open_tasks} color="#f39c12" />
             <Card title="Assigned Tasks" value={data.assigned_tasks} color="#3498db" />
             <Card title="Completed Tasks" value={data.completed_tasks} color="#27ae60" />
-            <Card title="Utilization %" value={data.resource_utilization_percent} color="#8e44ad" />
+
             <Card
               title="Completed Orders"
               value={data.completed_orders}
               color="#a2c01e"   
             />
+            <Card title="Utilization %" value={data.resource_utilization_percent} color="#8e44ad" />
 
           </div>
 
