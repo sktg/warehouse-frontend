@@ -286,14 +286,22 @@ function Tab({label,active,onClick}) {
   );
 }
 
-function Card({title,value,color}) {
+function Card({ title, value, color }) {
   return (
-    <div style={{flex:"1 1 220px",background:color,color:"white",padding:18,borderRadius:8}}>
+    <div
+      style={{
+        background: color,
+        color: "white",
+        padding: 18,
+        borderRadius: 8
+      }}
+    >
       <div>{title}</div>
-      <div style={{fontSize:26}}>{value}</div>
+      <div style={{ fontSize: 26 }}>{value}</div>
     </div>
   );
 }
+
 
 /* ---------- Task Sections ---------- */
 
@@ -463,7 +471,13 @@ function ResourceDashboard({ code, goBack, confirmTask, allocateTasks }) {
 const page={fontFamily:"Segoe UI, sans-serif",background:"#f4f6f8",minHeight:"100vh"};
 const content={maxWidth:"1200px",margin:"0 auto",padding:20};
 const tabs={display:"flex",gap:12,marginBottom:20};
-const cardsRow={display:"flex",gap:12,marginBottom:20,flexWrap:"wrap"};
+const cardsRow = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+  gap: 12,
+  marginBottom: 20
+};
+
 const controls={display:"flex",gap:10,marginBottom:15,flexWrap:"wrap"};
 const select={padding:8,borderRadius:4};
 const btnPrimary={padding:"8px 12px",background:"#3498db",color:"white",border:"none",borderRadius:4,cursor:"pointer"};
