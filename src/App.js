@@ -105,45 +105,7 @@ return (
 
           </div>
 
-          <Section title="Completed Orders">
-          <div style={scrollBox}>
-            <table style={table}>
-              <thead>
-                <tr>
-                  <th style={th}>Order No</th>
-                  <th style={th}>Priority</th>
-                  <th style={th}>Items</th>
-                  <th style={th}>Raised Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {completedOrders.length === 0 && (
-                  <tr>
-                    <td style={td} colSpan={4}>No completed orders yet</td>
-                  </tr>
-                )}
-
-                {completedOrders.map(o => (
-                  <tr key={o.order_no}>
-                    <td style={td}>{o.order_no}</td>
-                    <td style={td}>{o.priority}</td>
-                    <td
-                      style={{
-                        ...td,
-                        fontWeight: 600,
-                        color: "#27ae60"
-                      }}
-                    >
-                      {o.completed_items}/{o.total_items} ✅
-                    </td>
-
-                    <td style={td}>{o.raised_time}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          </Section>
+ 
 
 
           <div style={cardsRow}>
@@ -151,6 +113,12 @@ return (
             <Card title="Assigned Tasks" value={data.assigned_tasks} color="#3498db" />
             <Card title="Completed Tasks" value={data.completed_tasks} color="#27ae60" />
             <Card title="Utilization %" value={data.resource_utilization_percent} color="#8e44ad" />
+            <Card
+              title="Completed Orders"
+              value={data.completed_orders}
+              color="#a2c01e"   
+            />
+
           </div>
 
           {activeTab==="tasks" && (
